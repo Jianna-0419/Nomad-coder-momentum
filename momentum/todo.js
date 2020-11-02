@@ -8,6 +8,7 @@
     1. HTML 설정
     2. 사용자가 쓴 문자 가져와서 li 로 만들기
     3. 쓴 toDos 를 저장하기 (array 형태로 만들기)
+    4. 쓴 toDos 를 지우고, 지운 뒤에 저장하기 (어떤 걸 지워야하는 지도 선택할 수 있게)
  */
 
 const toDoForm = document.querySelector(".js-toDoForm"),
@@ -15,7 +16,19 @@ const toDoForm = document.querySelector(".js-toDoForm"),
     toDoList = document.querySelector(".js-toDoList");
 
 const TODOS_LS = 'toDos';
-const toDos = [];
+let toDos = [];
+
+
+function deleteToDo(event) {
+    const btn = event.target;
+    const li = btn.parentNode;
+    toDoList.removeChild(li);
+    const cleanToDos = toDos.filter(function(toDo) {
+        return toDo.id !== parseInt(li.id);
+    });
+    toDos = cleanToDos;
+    saveToDos();
+}
 
 function saveToDos() {
     localStorage.setItem(TODOS_LS, JSON.stringify(toDos));
@@ -31,6 +44,7 @@ function paintToDo(text) {
     const span = document.createElement("span");
     const newId = toDos.length + 1;
     delBtn.innerText = "❌";
+    delBtn.addEventListener("click", deleteToDo);
     span.innerText = text;
 
     // 둘 순서 바꿔서 작성하면 순서가 바뀐다
